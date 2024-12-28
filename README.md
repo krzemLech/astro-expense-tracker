@@ -8,11 +8,14 @@ Tailwind is used for styling with a bit of basic css in global file. It uses dar
 
 ## Features tested
 
-There are three feartures that the app presents, and these are:
+There are four feartures that the app presents, and these are:
 
 - **Dark Mode** - `ThemeBtn` component changes the mode from light to dark and script in `Layout` updates the \
   markup on eacch page re-render. [IMPORTANT] The Layout script utilizes [Astro lifecycle hooks](https://docs.astro.build/en/guides/view-transitions/#astroafter-swap) to eliminate flickering \
   on every new markaup render.
+- **Life cycle events and Client Router** - used for transition (persisting state) and for revalidation of data. \
+  The `referesh()` function in `@/lib` folder utilizes navigate feature from astro client router. \
+  In order to work properly Astro Client Router has to be imported in HTML head element (see `Layout` component)
 - **Astro DB** - Set up and connected to Turso thanks to variables set up in `example.env` file. \
   The db folder (outside of src) contains schemas and seeds for development. Database transactions are put into astro actions \
   whereas the queries for expenses are done directly in Astro component server code, in `ExpenseList` component.
