@@ -1,0 +1,76 @@
+---
+import { db, Expenses, eq } from "astro:db";
+import RemoveBtn from "./RemoveBtn.astro";
+
+const { selectedDate } = Astro.props as { selectedDate: Date };
+const formattedDate = selectedDate.toISOString().slice(0, 10);
+let data = await db
+  .select()
+  .from(Expenses)
+  .where(eq(Expenses.created_at, formattedDate))
+  .all();
+const total = data?.reduce((acc, item) => acc + item.amount, 0) || 0;
+---
+
+<section class="p-5">
+  <ul>
+    {
+      data.map((item) => (
+        <li class="flex justify-between items-center p-2 border-b border-zinc-600">
+          <span class="font-light">{item.title}</span>
+          <div>
+            <span class="mr-2 font-extralight">{item.amount} $</span>
+            <RemoveBtn id={item.id} />
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+  {
+    total ? (
+      <p class="total-wrapper flex justify-between mt-1 pt-3 pl-2 pr-9 relative">
+        <span class="font-medium">Total:</span>
+        <span class="font-medium">{total} $</span>
+      </p>
+    ) : (
+      <p class="text-center font-extralight text-zinc-500">
+        No expenses for this day
+      </p>
+    )
+  }
+</section>
+
+<script>
+  import { actions } from "astro:actions";
+  const btns = document.querySelectorAll(
+    ".remove-btn"
+  ) as NodeListOf<HTMLButtonElement>;
+  btns.forEach((btn) => {
+    btn.addEventListener("click", async (e) => {
+      const id = (e.currentTarget as HTMLButtonElement).dataset.id!;
+      actions
+        .removeExpense({ id })
+        .then(() => location.reload())
+        .catch(console.error); // add error handling
+    });
+  });
+</script>
+
+<style>
+  li.border-b:last-child {
+    border-bottom: none;
+  }
+
+  .total-wrapper::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    border-radius: 1px;
+    width: 100%;
+    background-image: theme("colors.gradient-primary");
+    /* border-top: 1px solid var(--zinc-100); */
+  }
+</style>

@@ -1,0 +1,13 @@
+---
+import { Icon } from "astro-icon/components";
+type FinIconProps = {
+  bg: string;
+};
+const { bg } = Astro.props as FinIconProps;
+---
+
+<div class="bg-gradient-primary p-0.5 rounded-full">
+  <div class={`size-16 rounded-full pt-2.5 ${bg || "bg-zinc-900"}`}>
+    <Icon name="finance" class="size-10 mx-auto" />
+  </div>
+</div>

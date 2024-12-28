@@ -1,0 +1,27 @@
+---
+import { getDateBack, formatDate } from "@/lib/dates";
+const { selectedDate, daysBack } = Astro.props;
+const displayDate = formatDate(selectedDate);
+
+const nextHref = daysBack > 0 ? `?day=${daysBack - 1}` : "/";
+const prevHref = `?day=${daysBack + 1}`;
+---
+
+<div class="flex justify-center items-center gap-4 text-zinc-500">
+  <a href={prevHref} class="text-2xl w-4 dark:hover:text-white hover:text-black"
+    >&lsaquo;</a
+  >
+  <p class="text-xs pt-0.5">{displayDate}</p>
+  {
+    daysBack > 0 ? (
+      <a
+        href={nextHref}
+        class="text-2xl w-4 text-right dark:hover:text-white hover:text-black"
+      >
+        &rsaquo;
+      </a>
+    ) : (
+      <div class="w-4" />
+    )
+  }
+</div>

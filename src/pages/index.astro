@@ -1,11 +1,37 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import FinIcon from "../components/FinIcon.astro";
+import ExpenseForm from "@/components/form/ExpenseForm";
+import ExpensesList from "@/components/ExpensesList.astro";
+import DateChanger from "@/components/DateChanger.astro";
+import { getDateBack } from "@/lib/dates";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+export const prerender = false;
+
+const { date, dayInt } = getDateBack(Astro.url.searchParams.get("day") || 0);
 ---
 
 <Layout>
-	<Welcome />
+  <main class="h-full flex justify-center items-start pt-[5%]">
+    <div
+      class="card flex flex-col border border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 bg-zinc-100 pt-8 pb-0 rounded-lg"
+    >
+      <header class="flex justify-between items-center pl-8 pr-16 pb-3">
+        <FinIcon bg="dark:bg-zinc-800 bg-zinc-200" />
+        <div>
+          <h1 class="text-4xl font-regular text-center">Expense tracker</h1>
+          <div class="relative bottom-2.5 flex justify-end mr-1">
+            <DateChanger selectedDate={date} daysBack={dayInt} />
+          </div>
+        </div>
+      </header>
+      <ExpenseForm
+        selectedDate={date}
+        daysBack={dayInt}
+        client:visible
+        transition:persist
+      />
+      <ExpensesList selectedDate={date} />
+    </div>
+  </main>
 </Layout>
