@@ -1,6 +1,6 @@
 ---
 import { db, Expenses, eq } from "astro:db";
-import RemoveBtn from "./RemoveBtn.astro";
+import RemoveBtn from "./RemoveBtn";
 
 const { selectedDate } = Astro.props as { selectedDate: Date };
 const formattedDate = selectedDate.toISOString().slice(0, 10);
@@ -20,7 +20,7 @@ const total = data?.reduce((acc, item) => acc + item.amount, 0) || 0;
           <span class="font-light">{item.title}</span>
           <div>
             <span class="mr-2 font-extralight">{item.amount} $</span>
-            <RemoveBtn id={item.id} />
+            <RemoveBtn id={item.id} client:load />
           </div>
         </li>
       ))
@@ -40,22 +40,6 @@ const total = data?.reduce((acc, item) => acc + item.amount, 0) || 0;
   }
 </section>
 
-<script>
-  import { actions } from "astro:actions";
-  const btns = document.querySelectorAll(
-    ".remove-btn"
-  ) as NodeListOf<HTMLButtonElement>;
-  btns.forEach((btn) => {
-    btn.addEventListener("click", async (e) => {
-      const id = (e.currentTarget as HTMLButtonElement).dataset.id!;
-      actions
-        .removeExpense({ id })
-        .then(() => location.reload())
-        .catch(console.error); // add error handling
-    });
-  });
-</script>
-
 <style>
   li.border-b:last-child {
     border-bottom: none;
@@ -71,6 +55,5 @@ const total = data?.reduce((acc, item) => acc + item.amount, 0) || 0;
     border-radius: 1px;
     width: 100%;
     background-image: theme("colors.gradient-primary");
-    /* border-top: 1px solid var(--zinc-100); */
   }
 </style>

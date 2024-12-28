@@ -3,6 +3,7 @@ import Input from "./Input";
 import AddBtn from "./AddBtn";
 import { formatDbDate } from "@/lib/dates";
 import { actions } from "astro:actions";
+import { refresh } from "@/lib/routes";
 
 type Props = {
   selectedDate: Date;
@@ -27,7 +28,7 @@ const ExpenseForm = ({ selectedDate }: Props) => {
         if (data?.success) {
           form.reset();
           setErrors(defaultErrors);
-          location.reload();
+          refresh();
         }
         if (error && error.code === "BAD_REQUEST") {
           setErrors({
