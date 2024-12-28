@@ -1,9 +1,9 @@
 import { db, Expenses, eq, count } from "astro:db";
 import { defineAction, ActionError } from "astro:actions";
-import { date, z } from "astro:schema";
+import { z } from "astro:schema";
 import crypto from "crypto";
-import exp from "constants";
 import { testDbDate } from "@/lib/dates";
+import { MAX_EXPENSE_ITEMS } from "@/config";
 
 const generateId = () => crypto.randomBytes(16).toString("hex");
 
@@ -20,9 +20,9 @@ export const server = {
     handler: async ({ title, amount, createdAt }) => {
       try {
         const docsCount = await db.select({ value: count() }).from(Expenses);
-        if (docsCount[0].value > 20) {
+        if (docsCount[0].value > MAX_EXPENSE_ITEMS) {
           throw new Error(
-            "You have reached the limit of 5 expenses, delete some to add more"
+            `You have reached the limit of ${MAX_EXPENSE_ITEMS} expenses, delete some to add more`
           );
         }
         await db.insert(Expenses).values({
