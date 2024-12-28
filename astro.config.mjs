@@ -9,7 +9,10 @@ import db from '@astrojs/db';
 
 import react from '@astrojs/react';
 
+import netlify from '@astrojs/netlify';
+
 // https://astro.build/config
 export default defineConfig({
-  integrations: [icon(), tailwind(), db(), react()]
+  integrations: [icon(), tailwind(), db(), react()],
+  adapter: netlify()
 });
